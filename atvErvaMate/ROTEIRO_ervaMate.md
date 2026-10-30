@@ -8,7 +8,7 @@ Atividade prática de CAP-423. Alvo: erva-mate (*Ilex paraguariensis*), já regi
 
 ## Visão geral
 
-O enunciado cita o notebook `05_Araucaria_RF_Classification_SpatialCV`. No material, ele é o `06/08_Araucaria_RF_Classification_SpatialCV.ipynb`. Os caminhos abaixo são relativos a `material/cap423-slides/`.
+O enunciado cita o notebook `05_Araucaria_RF_Classification_SpatialCV`. No material, ele é o `06/08_Araucaria_RF_Classification_SpatialCV.ipynb`. Os caminhos abaixo são relativos a `materialApoio/`. O notebook não lê nada de lá: tudo o que ele usa fica em `atvErvaMate/input/`.
 
 | Etapa | Item do enunciado | Base no material | O que muda em relação à aula |
 |---|---|---|---|
@@ -30,8 +30,8 @@ Tudo roda localmente, no kernel `base` (Miniforge, Python 3.13). Nada depende do
 | Item | Situação |
 |---|---|
 | Dependências | `scikit-learn` 1.9.1 instalado no `base`, que já tinha `pygbif`, `rasterio` e `geopandas` |
-| Rasters e pontos de solo | Em `material/cap423-slides/05/input/` |
-| Contorno do Brasil | Em `atvErvaMate/brazil.gpkg`, gerado da malha oficial do IBGE |
+| Rasters e pontos de solo | Em `atvErvaMate/input/`, copiados de `materialApoio/05/input/` |
+| Contorno do Brasil | Em `atvErvaMate/input/brazil.gpkg`, gerado da malha oficial do IBGE |
 
 **Declare a troca do contorno no notebook.** O enunciado pede o `brazil.gpkg` do curso, que só existe no BDC-Lab. O arquivo local tem o mesmo nome, mas vem da [malha `BR_Pais_2025` do IBGE](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2025/Brasil/BR_Pais_2025.zip), convertida de SIRGAS 2000 para EPSG:4326. Se você conseguir o arquivo do curso, basta sobrescrevê-lo: o código não muda, mas as contagens e o AUC podem mudar, porque o sorteio das pseudoausências depende do contorno.
 
@@ -63,12 +63,10 @@ from pyproj import Transformer
 from rasterio.transform import rowcol, xy
 from sklearn.neighbors import KNeighborsRegressor
 
-# Caminhos locais, com desvio para a pasta do curso se o notebook for aberto no BDC-Lab.
+# Os arquivos locais ficam todos na pasta do notebook. O desvio só vale se ele for aberto no BDC-Lab.
 BDC_INPUT = Path("/home/jovyan/grupos/pgrad-disciplinas/CAP-423-ciencia-de-dados-geoespaciais/dataset/input")
-if BDC_INPUT.exists():
-    INPUT_DIR, BRAZIL_PATH = BDC_INPUT, BDC_INPUT / "brazil.gpkg"
-else:
-    INPUT_DIR, BRAZIL_PATH = Path("../../material/cap423-slides/05/input"), Path("brazil.gpkg")
+INPUT_DIR = BDC_INPUT if BDC_INPUT.exists() else Path("input")
+BRAZIL_PATH = INPUT_DIR / "brazil.gpkg"
 
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
