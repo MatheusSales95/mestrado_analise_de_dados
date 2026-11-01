@@ -1,0 +1,4 @@
+# A malha do IBGE tem 774 MB e os arquivos gerados passam de 1 GB, acima do limite de 100 MB do GitHub.
+# O notebook baixa e gera tudo de novo.
+input/
+output/
